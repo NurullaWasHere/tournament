@@ -3,9 +3,16 @@ import jwt from 'jsonwebtoken';
 import {sendEmail} from '../services/NodeMailer.service.js'
 import { createUser } from '../services/Authorization.service.js';
 import { verifyEmail } from '../services/Authorization.service.js';
+import { validationResult } from 'express-validator';
 
 export const login = async (req, res) => {
    try {
+    const errors = validationResult(req);
+
+    if(!errors.isEmpty()){
+      return res.status(200).json({message: 'Invalid login credentials', errors: errors.array()});
+    }
+
     const {
       email,
       password,
@@ -31,6 +38,12 @@ export const login = async (req, res) => {
 
 export const registration = async  (req, res) => {
     try {
+        const errors = validationResult(req);
+
+        if(!errors.isEmpty()){
+          return res.status(200).json({message: 'Invalid registration credentials', errors: errors.array()});
+        }
+
         const isExist = await User.findOne({where: {email}});
         if (isExist) {
           return res.status(200).json({message: 'User already exist'});
@@ -44,6 +57,12 @@ export const registration = async  (req, res) => {
 
 export const isVerified = async (req, res) => {
   try {
+    const errors = validationResult(req);
+
+    if(!errors.isEmpty()){
+      return res.status(200).json({message: 'Invalid isVerified credentials', errors: errors.array()});
+    }
+
     const {verified} = req.body;
     if (!verified) {
       return res.status(200).json({message: 'Email not verified'});
