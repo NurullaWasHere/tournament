@@ -15,4 +15,4 @@ categoryRouter.get('/getAll', async (req,res) => {
   }
 })
 
-export default category;
+export default categoryRouter;
