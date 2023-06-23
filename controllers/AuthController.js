@@ -1,6 +1,5 @@
 import {User} from '../sequelize/models.js'
 import jwt from 'jsonwebtoken';
-import {sendEmail} from '../services/NodeMailer.service.js'
 import { createUser } from '../services/Authorization.service.js';
 import { verifyEmail } from '../services/Authorization.service.js';
 import { validationResult } from 'express-validator';

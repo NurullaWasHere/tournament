@@ -14,7 +14,8 @@ export const createNewContest = async (contestData, requiremenets, contestLocati
       }
       const newLocation = await createLocation(contestLocation);
       const newRecuirements = await verifyRequirements(requiremenets);
-      const newQrCode = await createQrCode(expectedId);
+      const expectedId = await contest.count() + 1;
+      const newQrCode = await createQrCode(String(expectedId));
       const newContest = await contest.create({
         ...contestData,
         qrCode: newQrCode,
@@ -69,40 +70,11 @@ export const verifyRequirements = async (requirements) => {
   }
 };
 
-export const getContest = async (contestId) => {
-  try {
-    const contestData = await contest.findOne({
-      where: {
-        id: contestId
-      },
-      include: [
-        {
-          model: location,
-          as: 'location'
-        },
-        {
-          model: contestRequirements,
-          as: 'contestRequirements'
-        },
-        {
-          model: overView,
-          as: 'overView'
-        }
-      ]
-    });
-    if(!contestData){
-      return false;
-    }
-    return contestData;
-  } catch (error) {
-    console.log(error)
-  }
-};
-
-const createQrCode = async (request) => {
-    const qrcode = await QRCode.toString(String("http://localhost:5173/login"), {
+const createQrCode = async (contestId) => {
+    let qrcode = await QRCode.toString(String(`http://localhost:5173/contest/approve?contestId=${contestId}`), {
       type: 'svg',
       errorCorrectionLevel: 'H'
     })
+    qrcode = qrcode.replace(/"/g, "'");
     return qrcode;
 };

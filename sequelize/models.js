@@ -64,6 +64,13 @@ export const contestRequirements = sequelize.define('contestInfo', {
     deleted : {type: DataTypes.BOOLEAN, defaultValue: false},
 })
 
+export const contestExpense = sequelize.define('contestExpenses', {
+    id: {type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true},
+    name: {type: DataTypes.STRING},
+    amount: {type: DataTypes.INTEGER},
+    price: {type: DataTypes.INTEGER},
+})
+
 export const overView = sequelize.define('overView', {
     id: {type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true},
     text: {type: DataTypes.STRING, defaultValue: " "},
@@ -107,11 +114,14 @@ contest.belongsToMany(User, {through: UserContest})
 contest.hasMany(location)
 location.belongsTo(contest)
 
-contest.hasMany(category)
-category.belongsTo(contest)
+category.hasMany(contest)
+contest.belongsTo(category)
 
 contest.hasMany(contestRequirements)
 contestRequirements.belongsTo(contest)
+
+contest.hasMany(contestExpense)
+contestExpense.belongsTo(contest)
 
 team.hasMany(User)
 User.belongsTo(team)
