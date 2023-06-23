@@ -1,5 +1,5 @@
-const {DataTypes} = require('sequelize')
-const sequelize = require('./db')
+import sequelize from './db.js'
+import { DataTypes } from 'sequelize'
 
 export const User = sequelize.define('user', {
     id: {type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true},
@@ -28,7 +28,6 @@ export const billingDetails = sequelize.define('billingDetails', {
 export const contest = sequelize.define('contest', {
     id: {type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true},
     name: {type: DataTypes.STRING},
-    type: {type: DataTypes.STRING},
     title: {type: DataTypes.STRING},
     status: {type: DataTypes.STRING},
     prize: {type: DataTypes.INTEGER},
@@ -60,10 +59,9 @@ export const contestRequirements = sequelize.define('contestInfo', {
     gender: {type: DataTypes.STRING, defaultValue: "All"},
     minAge: {type: DataTypes.INTEGER , defaultValue: 5},
     maxAge: {type: DataTypes.INTEGER, defaultValue: 100},
-    participantsLimit: {type: DataTypes.INTEGER},
+    participantsLimit: {type: DataTypes.INTEGER, defaultValue: 100},
     fee: {type: DataTypes.INTEGER, defaultValue: 0},
     deleted : {type: DataTypes.BOOLEAN, defaultValue: false},
-
 })
 
 export const overView = sequelize.define('overView', {
@@ -86,6 +84,11 @@ export const team = sequelize.define('team', {
     deleted : {type: DataTypes.BOOLEAN, defaultValue: false},
 })
 
+export const category = sequelize.define('category', {
+    id: {type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true},
+    name: {type: DataTypes.STRING, allowNull: false},
+})
+
 
 User.hasMany(billingDetails)
 billingDetails.belongsTo(User)
@@ -95,6 +98,9 @@ contest.belongsToMany(User, {through: UserContest})
 
 contest.hasMany(location)
 location.belongsTo(contest)
+
+contest.hasMany(category)
+category.belongsTo(contest)
 
 contest.hasMany(contestRequirements)
 contestRequirements.belongsTo(contest)

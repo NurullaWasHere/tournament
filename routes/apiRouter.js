@@ -1,12 +1,9 @@
 import { Router } from "express";
-import {registration, login, getUser} from '../controllers/AuthController.js'
-
+import authRouter from './authRouter.js';
 
 const api = new Router();
 
-api.post('/registration', registration);
-api.post('/login', login);
-api.get('/user/:id', getUser);
+api.use('/auth', authRouter);
 
 export default api;
 

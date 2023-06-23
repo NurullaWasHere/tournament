@@ -1,5 +1,5 @@
 import express from "express";
-import sequelize from "./sequelize/db";
+import sequelize from "./sequelize/db.js";
 import cors from "cors";
 import { config } from "dotenv";
 import apiRouter from "./routes/apiRouter.js";
