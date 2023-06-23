@@ -1,4 +1,4 @@
-import { contestExpense } from "../sequelize/models";
+import { contestExpense } from "../sequelize/models.js";
 
 
 export const createExpense = async (expenseData) => {
