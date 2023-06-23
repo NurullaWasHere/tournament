@@ -6,7 +6,6 @@ export const validateCreateContest = [
   check("contestData.organizerId").exists().withMessage('Contest organizerId is required'),
   check("contestData.startDate").exists().withMessage('Contest start date must be exist'),
   check("contestData.endDate").exists().withMessage('Contest end date must be exist'),
-  check("contestData.qrCode").exists().withMessage('Contest qrCode must be exist'),
 
   check("contestRequirements.participation").isLength({min: 4, max: 15}).withMessage('Contest participation must be longer than 4 and shorter than 15'),
   check("contestRequirements.minAge").isNumeric().withMessage('Contest minAge must be number'),

@@ -6,11 +6,18 @@ export const createContest = async (req, res) => {
   try {
       const {
         contestData,
-        contestRequirements,
+        contestRequirement,
         contestLocation
       } = req.body;
 
-      const newContest = await createNewContest(contestData, contestRequirements, contestLocation);
+      const newContest = await createNewContest(contestData, contestRequirement, contestLocation);
+
+      if(!newContest){
+        return res.status(200).json({
+          success: false,
+          message: 'Contest with this name already exists'
+        });
+      }
 
       return res.status(200).json({
         success: true,

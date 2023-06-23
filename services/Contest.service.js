@@ -2,26 +2,32 @@ import {contest, contestRequirements, location, overView} from '../sequelize/mod
 import {createLocation, getLocation} from './Location.service.js'
 import QRCode from 'qrcode';
 
-export const createNewContest = async (contestData, contestRequirements, contestLocation) => {
+export const createNewContest = async (contestData, requiremenets, contestLocation) => {
   try {
+      const isExistingContest = await contest.findOne({
+        where: {
+          name: contestData.name
+        }
+      });
+      if(isExistingContest){
+        return false;
+      }
       const newLocation = await createLocation(contestLocation);
-      const newRecuirements = await verifyRequirements(contestRequirements);
-      const {expectedId} = contest.build({
-        name: contestData.name || 'newcontest',
-      })
+      const newRecuirements = await verifyRequirements(requiremenets);
+      const newQrCode = await createQrCode(expectedId);
       const newContest = await contest.create({
         ...contestData,
-        qrcode: createQrCode(expectedId),
+        qrCode: newQrCode,
       });
       await newContest.addLocation(newLocation);
-      await newContest.addСontestInfo(newRecuirements);
+      await newContest.addContestInfo(newRecuirements);
       return newContest;
   } catch (error) {
     console.log(  error ) 
   }
 }; 
 
-export const verifyRequirements = async (contestRequirements) => {
+export const verifyRequirements = async (requirements) => {
   try {
     const {
       mode,
@@ -31,9 +37,9 @@ export const verifyRequirements = async (contestRequirements) => {
       maxAge,
       participantsLimit,
       fee
-    } = contestRequirements;
+    } = requirements;
   
-    const requirements = await contestRequirements.findOne({
+    const existingRequirement = await contestRequirements.findOne({
       where: {
         participation,
         gender,
@@ -43,8 +49,8 @@ export const verifyRequirements = async (contestRequirements) => {
         fee
       }
     });
-    if(requirements){
-      return requirements;
+    if(existingRequirement){
+      return existingRequirement;
     }
   
     const newRequirements = await contestRequirements.create({
@@ -93,9 +99,8 @@ export const getContest = async (contestId) => {
   }
 };
 
-
-const createQrCode = async (contestId) => {
-    const qrcode = QRCode.toString(String(contestId), {
+const createQrCode = async (request) => {
+    const qrcode = await QRCode.toString(String("http://localhost:5173/login"), {
       type: 'svg',
       errorCorrectionLevel: 'H'
     })

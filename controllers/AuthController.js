@@ -24,7 +24,7 @@ export const login = async (req, res) => {
       return res.status(200).json({message: 'Invalid user credentials'});
     }
     if(user.password !== password){
-      return res.status(200).json({message: 'Incorrect password'});
+      return res.status(200).json({message: 'Incorrect password', errors: [{msg: 'Incorrect password'}]});
     }
 
     const accessToken = jwt.sign({id: user.id}, process.env.SECRET_KEY || 'secret123', {expiresIn: '7d'});
