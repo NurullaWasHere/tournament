@@ -12,6 +12,7 @@ const transporter = new nodemailer.createTransport({
  * Sends email to user
  * @param {string} email 
  * @param {string} text -text of email
+ * @returns {void}
  */
 export const sendEmail = async (email, text) => {
   const mailOptions = {

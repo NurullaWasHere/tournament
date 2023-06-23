@@ -29,15 +29,15 @@ export const contest = sequelize.define('contest', {
     id: {type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true},
     name: {type: DataTypes.STRING},
     title: {type: DataTypes.STRING},
-    status: {type: DataTypes.STRING},
-    prize: {type: DataTypes.INTEGER},
-    priority: {type: DataTypes.STRING},
-    visibility: {type: DataTypes.STRING},
+    status: {type: DataTypes.STRING, defaultValue: "Upcoming"},
+    prize: {type: DataTypes.INTEGER, defaultValue: 0},
+    priority: {type: DataTypes.STRING, defaultValue: "Low"},
+    visibility: {type: DataTypes.STRING, defaultValue: "Public"},
     about: {type: DataTypes.STRING},
-    startDate: {type: DataTypes.STRING},
-    endDate: {type: DataTypes.STRING},
-    qrCode: {type: DataTypes.STRING},
-    organizerId: {type: DataTypes.INTEGER},
+    startDate: {type: DataTypes.STRING, allowNull: false, defaultValue: new Date()},
+    endDate: {type: DataTypes.STRING, allowNull: false},
+    qrCode: {type: DataTypes.STRING, allowNull: false},
+    organizerId: {type: DataTypes.INTEGER, allowNull: false, defaultValue: 1},
     deleted : {type: DataTypes.BOOLEAN, defaultValue: false},
 })
 
@@ -86,7 +86,15 @@ export const team = sequelize.define('team', {
 
 export const category = sequelize.define('category', {
     id: {type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true},
-    name: {type: DataTypes.STRING, allowNull: false},
+    title: {type: DataTypes.STRING, allowNull: false},
+    imgUrl: {type: DataTypes.STRING},
+    slug: {type: DataTypes.STRING},
+})
+
+export const participant = sequelize.define('participant', {
+    id: {type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true},
+    fullname: {type: DataTypes.STRING, allowNull: false},
+    description: {type: DataTypes.STRING, defaultValue: "Участник"},
 })
 
 

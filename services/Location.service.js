@@ -1,4 +1,4 @@
-import {location} from '../sequelize/models'
+import {location} from '../sequelize/models.js'
 
 export const createLocation = async (locationData) => {
     try{

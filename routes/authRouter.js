@@ -4,7 +4,7 @@ import {validateIsVerified, loginValidation, registerValidation} from '../valida
 
 const authRouter = new Router();
 
-authRouter.get('/user/:id', getUser);
+authRouter.get('/getUser/:id', getUser);
 authRouter.post('/registration',registerValidation,registration);
 authRouter.post('/login',loginValidation,login);
 authRouter.post('/registration/verified',validateIsVerified,isVerified);

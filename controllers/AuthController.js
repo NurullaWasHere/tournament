@@ -96,7 +96,6 @@ export const getUser = async (req, res) => {
 export const deleteUser = async (req, res) => {
   try {
     const {id} = req.body;
-
     const isExist = await User.findOne({where: {id}});
     if (!isExist) {
       return res.status(200).json({message: 'User not found'});

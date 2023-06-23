@@ -1,7 +1,8 @@
 import {contest, contestRequirements, location, overView} from '../sequelize/models.js'
+import { createNewContest } from '../services/Contest.service.js';
 
 
-const createContest = async (req, res) => {
+export const createContest = async (req, res) => {
   try {
       const {
         contestData,
@@ -9,34 +10,30 @@ const createContest = async (req, res) => {
         contestLocation
       } = req.body;
 
-      const {latitude, longitude, address, city} = contestLocation;
-      
-      const LocationData = await location.findOne({
-        where: {
-          address,
-          city,
-          country: 'Kazakhstan'
-        }
+      const newContest = await createNewContest(contestData, contestRequirements, contestLocation);
+
+      return res.status(200).json({
+        success: true,
+        newContest
       });
-
   } catch (error) {
     console.log(error)
   }
 };
 
-const getContest = async (req, res) => {
+export const getContest = async (req, res) => {
   try {
-    
+
   } catch (error) {
     console.log(error)
   }
 };
 
-const updateContest = async (req, res) => {
+export const updateContest = async (req, res) => {
 
 };
 
-const deleteContest = async (req, res) => {
+export const deleteContest = async (req, res) => {
 
 };
 

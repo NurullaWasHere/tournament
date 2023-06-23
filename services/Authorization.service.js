@@ -14,6 +14,11 @@ export const createUser = async (userDto) => {
       role,
     } = userDto;
 
+    const isExist = await User.findOne({where: {email}});
+    if (isExist) {
+      return res.status(200).json({message: 'User already exist'});
+    }
+
     const user = await User.create({
       firstname,
       lastname,
