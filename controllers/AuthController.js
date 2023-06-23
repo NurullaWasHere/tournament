@@ -39,7 +39,7 @@ export const login = async (req, res) => {
 export const registration = async  (req, res) => {
     try {
         const errors = validationResult(req);
-
+        const {email} = req.body
         if(!errors.isEmpty()){
           return res.status(200).json({message: 'Invalid registration credentials', errors: errors.array()});
         }

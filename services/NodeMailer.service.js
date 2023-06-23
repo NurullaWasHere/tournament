@@ -4,7 +4,7 @@ const transporter = new nodemailer.createTransport({
     service: 'gmail',
     auth: {
         user: 'nurullaamannula05@gmail.com',
-        pass: 'gazizorda101',
+        pass: 'exxjyqzghrxgosyi',
     }
 })
 
@@ -18,12 +18,12 @@ export const sendEmail = async (email, text) => {
     from: 'nurullaamannula05@gmail.com',
     to: email,
     subject: 'Confirm authorization',
-    text
+    text: String(text)
   };
 
   transporter.sendMail(mailOptions, (error, info) => {
     if(error) {
-        console.log('Sending email failed', info);
+        console.log('Sending email failed', error);
     } else {
         console.log('Email sent successfully');
     }
