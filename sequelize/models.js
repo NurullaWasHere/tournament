@@ -16,10 +16,11 @@ export const User = sequelize.define('user', {
 
 export const billingDetails = sequelize.define('billingDetails', {
     id: {type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true},
-    bankName: {type: DataTypes.STRING},
-    cardDate: {type: DataTypes.STRING},
-    cardNumber: {type: DataTypes.STRING},
-    cardCVC: {type: DataTypes.STRING},
+    card_name: {type: DataTypes.STRING},
+    card_surname: {type: DataTypes.STRING},
+    card_date: {type: DataTypes.STRING},
+    card_number: {type: DataTypes.STRING},
+    card_cvc: {type: DataTypes.STRING},
     swiftCode: {type: DataTypes.STRING},
     iban: {type: DataTypes.STRING},
     deleted : {type: DataTypes.BOOLEAN, defaultValue: false},
@@ -30,7 +31,7 @@ export const contest = sequelize.define('contest', {
     name: {type: DataTypes.STRING},
     title: {type: DataTypes.STRING},
     status: {type: DataTypes.STRING, defaultValue: "Upcoming"},
-    prize: {type: DataTypes.INTEGER, defaultValue: 0},
+    prize: {type: DataTypes.STRING, defaultValue: "No prize"},
     priority: {type: DataTypes.STRING, defaultValue: "Low"},
     visibility: {type: DataTypes.STRING, defaultValue: "Public"},
     about: {type: DataTypes.STRING},
@@ -86,8 +87,6 @@ export const UserContest = sequelize.define('userContest', {
 export const team = sequelize.define('team', {
     id: {type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true},
     name: {type: DataTypes.STRING, allowNull: false},
-    avatar: {type: DataTypes.STRING},
-    info: {type: DataTypes.STRING},
     deleted : {type: DataTypes.BOOLEAN, defaultValue: false},
 })
 
@@ -103,7 +102,16 @@ export const participant = sequelize.define('participant', {
     fullname: {type: DataTypes.STRING, allowNull: false},
     description: {type: DataTypes.STRING, defaultValue: "Участник"},
     play_number: {type: DataTypes.STRING, defaultValue: "Не определен"},
+    payment_status: {type: DataTypes.BOOLEAN, defaultValue: false},
 })
+
+export const invitedUser = sequelize.define('invited_user', {
+    id: {type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true},
+    name: {type: DataTypes.STRING, allowNull: false},
+    telegram: {type: DataTypes.STRING, allowNull: true},
+})
+
+
 
 
 User.hasMany(billingDetails)
@@ -127,6 +135,14 @@ contestExpense.belongsTo(contest)
 contest.hasMany(participant)
 participant.belongsTo(contest)
 
-team.hasMany(User)
-User.belongsTo(team)
+contest.hasMany(team)
+team.belongsTo(contest)
 
+team.hasMany(invitedUser)
+invitedUser.belongsTo(team)
+
+contest.hasOne(billingDetails)
+billingDetails.belongsTo(contest)
+
+contest.hasMany(invitedUser)
+invitedUser.belongsTo(contest)

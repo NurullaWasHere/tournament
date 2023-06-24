@@ -2,8 +2,9 @@ import {contest, contestRequirements, location, overView, User, participant} fro
 import {createLocation, getLocation} from './Location.service.js'
 import { createExpense } from './ContestExpense.service.js';
 import QRCode from 'qrcode';
+import { createTeam } from './PrivateContest.service.js';
 
-export const createNewContest = async (contestData, requiremenets, contestLocation, expenses) => {
+export const createNewContest = async (contestData, requiremenets, contestLocation, expenses, teams) => {
   try {
       const isExistingContest = await contest.findOne({
         where: {
@@ -21,9 +22,12 @@ export const createNewContest = async (contestData, requiremenets, contestLocati
         ...contestData,
         qrCode: newQrCode,
       });
+      
       await newContest.addLocation(newLocation);
       await newContest.addContestInfo(newRecuirements);
-
+      if(newContest.visibility === 'private'){
+        await createTeam(teams, newContest.id);
+      }
       for (let i = 0; i < expenses.length; i++) {
         const el = expenses[i];
         const newExpesne = await createExpense(el);
@@ -86,37 +90,37 @@ const createQrCode = async (contestId) => {
     return qrcode;
 };
 
-export const addParticipantToContest = async (userId, contestId, opts) => {
+export const addParticipantToContest = async (userId, contestId, opts = {description: '', play_number: 0}) => {
   try {
       if(!userId || !contestId){
-        return false;
+        return {success: false, message: 'User or contest not found'};
       }
       const user = await User.findOne({
         where: {
           id: userId
         }
       })
+
+      if(!user){
+        return {success: false, message: 'User not found'};
+      }
       const contestData = await contest.findOne({
         where: {
           id: contestId
         }
       });
-
-
-
-
-
-      const participant = await participant.create({
+      const newParticipant = await participant.create({
         id: userId,
         fullname: user.firstname + ' ' + user.lastname,
         description: opts.description || 'Участник',
         play_number: String(opts.play_number) || 'Не определен',
       })
-      await contestData.addParticipant(participant).then( () => {
-        return true;
-      }).catch( () => {
-        return false;
+      await contestData.addParticipant(newParticipant).then( () => {
+        return {success: true};
+      }).catch( (err) => {
+        return {success: false, message: err};
       });
+      return {success: true};
   } catch (error) { 
     console.log(error)
   }

@@ -1,6 +1,6 @@
 import {contest, contestRequirements, location, overView, User} from '../sequelize/models.js'
 import { createNewContest, addParticipantToContest } from '../services/Contest.service.js';
-import { createExpense, getTotalPrice,} from '../services/ContestExpense.service.js';
+import { getAllExpenses, getTotalPrice,} from '../services/ContestExpense.service.js';
 
 
 export const createContest = async (req, res) => {
@@ -9,10 +9,11 @@ export const createContest = async (req, res) => {
         contestData,
         contestRequirement,
         contestLocation,
-        Expenses
+        Expenses,
+        teams
       } = req.body;
 
-      const newContest = await createNewContest(contestData, contestRequirement, contestLocation, Expenses);
+      const newContest = await createNewContest(contestData, contestRequirement, contestLocation, Expenses,teams);
 
       if(!newContest){
         return res.status(200).json({
@@ -63,10 +64,12 @@ export const getContest = async (req, res) => {
         });
       }
       const totalPrice = await getTotalPrice(contestId);
+      const allExpenses = await getAllExpenses(contestId);
       return res.status(200).json({
         success: true,
         contestData,
-        totalPrice
+        totalPrice,
+        allExpenses
       });
     }
     if(categoryId){
@@ -89,17 +92,10 @@ export const getContest = async (req, res) => {
 
 export const enrollToContest = async ( req, res ) => {
     try {
-      const {contestId, opts} = req.body;
-      const userId = req.user.id;
-      const res = await addParticipantToContest(userId, contestId, opts);
-      if(!res){
-        return res.status(200).json({
-          success: false,
-          message: 'Something went wrong with enrolling'
-        });
-      }
+      const {contestId, userId,opts} = req.body;
+      const result = await addParticipantToContest(userId, contestId, opts);
       return res.status(200).json({
-        success: res
+        success: result
       });
     } catch (error) {
       console.log(error)

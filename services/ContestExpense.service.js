@@ -14,6 +14,19 @@ export const createExpense = async (expenseData) => {
   }
 };
 
+export const getAllExpenses = async (contestId) => {
+  try {
+    const expenses = await contestExpense.findAll({
+      where: {
+        contestId
+      }
+    });
+    return expenses;
+  } catch (error) {
+    console.log(error)
+  }
+};
+
 
 export const getTotalPrice = async (contestId) => {
   try {
