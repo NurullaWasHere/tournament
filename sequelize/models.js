@@ -102,6 +102,7 @@ export const participant = sequelize.define('participant', {
     id: {type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true},
     fullname: {type: DataTypes.STRING, allowNull: false},
     description: {type: DataTypes.STRING, defaultValue: "Участник"},
+    play_number: {type: DataTypes.STRING, defaultValue: "Не определен"},
 })
 
 
@@ -122,6 +123,9 @@ contestRequirements.belongsTo(contest)
 
 contest.hasMany(contestExpense)
 contestExpense.belongsTo(contest)
+
+contest.hasMany(participant)
+participant.belongsTo(contest)
 
 team.hasMany(User)
 User.belongsTo(team)
