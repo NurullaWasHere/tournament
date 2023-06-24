@@ -102,6 +102,10 @@ export const addParticipantToContest = async (userId, contestId, opts) => {
         }
       });
 
+
+
+
+
       const participant = await participant.create({
         id: userId,
         fullname: user.firstname + ' ' + user.lastname,

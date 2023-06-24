@@ -3,10 +3,10 @@ import { literal , fn} from "sequelize";
 
 export const createExpense = async (expenseData) => {
   try {
-
-    
     const newExpense = await contestExpense.create({
-      ...expenseData
+      name: expenseData.name,
+      price: expenseData.price,
+      amount: expenseData.amount,
     });
     return newExpense;
   } catch (error) {
