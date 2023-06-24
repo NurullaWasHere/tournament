@@ -109,7 +109,7 @@ export const participant = sequelize.define('participant', {
 export const invitedUser = sequelize.define('invited_user', {
     id: {type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true},
     name: {type: DataTypes.STRING, allowNull: false},
-    telegram: {type: DataTypes.STRING, allowNull: true},
+    email: {type: DataTypes.STRING, allowNull: true},
 })
 
 

@@ -1,4 +1,5 @@
 import { contest, participant,invitedUser, contestRequirements, contestExpense, User, team } from "../sequelize/models.js";
+import { sendEmail } from './NodeMailer.service.js';
 
 
 /**
@@ -45,6 +46,11 @@ export const inviteUser = async (userId, contestId) => {
 
 export const createTeam = async ( teamData = [{}], contestId) => {
   try {
+    const contestData = await contest.findOne({
+      where: {
+        id: contestId
+      }
+    });
 
     for (let j = 0; j < teamData.length; j++) {
       const newTeam = await team.create({
@@ -57,15 +63,12 @@ export const createTeam = async ( teamData = [{}], contestId) => {
             name: users[i].name,
             telegram: users[i].telegram
           });
+          sendEmail(users[i].email, 'Приглашение в команду', `Вы были приглашены в команду ${newTeam.name} в соревновании ${contestData.name}`)
           await newTeam.addInvited_user(newInvitedUser);       
       }
     }
-    return newTeam;
+    return true;
   } catch (error) {
     console.log(error)
   }
-}
-
-export const makePayment = async () => {
-
 }

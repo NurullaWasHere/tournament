@@ -19,7 +19,7 @@ export const sendEmail = async (email, text) => {
     from: 'nurullaamannula05@gmail.com',
     to: email,
     subject: 'Confirm authorization',
-    text: `Ваш код подтверждения: ${text}`
+    text: `${text}`
   };
 
   transporter.sendMail(mailOptions, (error, info) => {

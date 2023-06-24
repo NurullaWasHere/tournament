@@ -1,6 +1,9 @@
 import {contest, contestRequirements, location, contestExpense, team} from '../sequelize/models.js'
 import { createNewContest, addParticipantToContest } from '../services/Contest.service.js';
 import { getAllExpenses, getTotalPrice,} from '../services/ContestExpense.service.js';
+import { createUniqueUUID } from '../services/Contest.service.js';
+import { makePayment } from '../services/Payment.service.js';
+import { getPayment } from '../services/Payment.service.js';
 
 
 export const createContest = async (req, res) => {
@@ -35,7 +38,11 @@ export const getContest = async (req, res) => {
   try {
     const {contestId, categoryId, key} = req.query;
     if(!categoryId && !contestId && !key){
-      const contests = await contest.findAll();
+      const contests = await contest.findAll({
+        where: {
+          visibility: 'public'
+        }
+      });
       return res.status(200).json({
         success: true,
         contests
@@ -148,3 +155,28 @@ export const deleteContest = async (req, res) => {
 
 };
 
+export const pay = async (req,res) => {
+  try {
+    const {value, currency} = req.body;    
+    const key = createUniqueUUID(Math.random());
+    const makePaymentResult = await makePayment(key, {value: value, currency: currency});
+    return res.status(200).json({
+      success: true,
+      makePaymentResult
+    });
+  } catch (error) {
+    console.log(error)
+  }
+}
+
+export const getPay = async (req, res) => {
+  try {
+    const {paymentId} = req.query;
+    const payment = await getPayment(paymentId);
+    return res.status(200).json({
+      payment
+    });
+  } catch (error) {
+    console.log(error)
+  }
+};
