@@ -157,9 +157,9 @@ export const deleteContest = async (req, res) => {
 
 export const pay = async (req,res) => {
   try {
-    const {value, currency} = req.body;    
+    const {value} = req.body;    
     const key = createUniqueUUID(Math.random());
-    const makePaymentResult = await makePayment(key, {value: value, currency: currency});
+    const makePaymentResult = await makePayment(key, {value, currency: 'RUB'});
     return res.status(200).json({
       success: true,
       makePaymentResult
