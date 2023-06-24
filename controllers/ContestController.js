@@ -1,4 +1,4 @@
-import {contest, contestRequirements, location, overView, User} from '../sequelize/models.js'
+import {contest, contestRequirements, location, contestExpense, team} from '../sequelize/models.js'
 import { createNewContest, addParticipantToContest } from '../services/Contest.service.js';
 import { getAllExpenses, getTotalPrice,} from '../services/ContestExpense.service.js';
 
@@ -33,8 +33,8 @@ export const createContest = async (req, res) => {
 
 export const getContest = async (req, res) => {
   try {
-    const {contestId, categoryId} = req.query;
-    if(!categoryId && !contestId){
+    const {contestId, categoryId, key} = req.query;
+    if(!categoryId && !contestId && !key){
       const contests = await contest.findAll();
       return res.status(200).json({
         success: true,
@@ -54,6 +54,14 @@ export const getContest = async (req, res) => {
           {
             model: contestRequirements,
             as: 'contestInfos'
+          },
+          {
+            model: team,
+            as: 'teams'
+          },
+          {
+            model: contestExpense,
+            as: 'contestExpenses'
           }
         ]
       });
@@ -78,10 +86,40 @@ export const getContest = async (req, res) => {
           categoryId
         }
       });
-      const totalPrice = await getTotalPrice(contestId);
       return res.status(200).json({
         success: true,
         contests,
+        totalPrice
+      });
+    }
+    if(key){
+      const contest1 = await contest.findOne({
+        where: {
+          key
+        },
+        include: [
+          {
+            model: location,
+            as: 'locations'
+          },
+          {
+            model: contestRequirements,
+            as: 'contestInfos'
+          },
+          {
+            model: team,
+            as: 'teams'
+          },
+          {
+            model: contestExpense,
+            as: 'contestExpenses'
+          }
+        ]
+      });
+      const totalPrice = await getTotalPrice(contest1.id);
+      return res.status(200).json({
+        success: true,
+        contest1,
         totalPrice
       });
     }

@@ -39,6 +39,7 @@ export const contest = sequelize.define('contest', {
     endDate: {type: DataTypes.STRING, allowNull: false},
     qrCode: {type: DataTypes.TEXT, allowNull: false},
     organizerId: {type: DataTypes.INTEGER, allowNull: false, defaultValue: 1},
+    key: {type: DataTypes.TEXT, unique: true, allowNull: false},
     deleted : {type: DataTypes.BOOLEAN, defaultValue: false},
 })
 

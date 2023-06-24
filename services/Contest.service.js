@@ -3,6 +3,7 @@ import {createLocation, getLocation} from './Location.service.js'
 import { createExpense } from './ContestExpense.service.js';
 import QRCode from 'qrcode';
 import { createTeam } from './PrivateContest.service.js';
+import { v5 } from 'uuid';
 
 export const createNewContest = async (contestData, requiremenets, contestLocation, expenses, teams) => {
   try {
@@ -11,16 +12,19 @@ export const createNewContest = async (contestData, requiremenets, contestLocati
           name: contestData.name
         }
       });
+      const expectedId = await contest.count() + 1;
+      const key = createUniqueUUID(expectedId);
+
       if(isExistingContest){
         return false;
       }
       const newLocation = await createLocation(contestLocation);
       const newRecuirements = await verifyRequirements(requiremenets);
-      const expectedId = await contest.count() + 1;
       const newQrCode = await createQrCode(String(expectedId));
       const newContest = await contest.create({
         ...contestData,
         qrCode: newQrCode,
+        key
       });
       
       await newContest.addLocation(newLocation);
@@ -124,4 +128,10 @@ export const addParticipantToContest = async (userId, contestId, opts = {descrip
   } catch (error) { 
     console.log(error)
   }
+}
+
+export const createUniqueUUID = (id) => {
+  const MY_NAMESPACE = '1b671a64-40d5-491e-99b0-da01ff1f3341';
+  const uuidV5 = v5(String(id), MY_NAMESPACE)
+  return uuidV5;
 }
