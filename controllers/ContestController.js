@@ -178,6 +178,10 @@ export const getContest = async (req, res) => {
           {
             model: contestExpense,
             as: 'contestExpenses'
+          },
+          {
+            model: participant,
+            as: 'participants'
           }
         ]
       });
