@@ -13,6 +13,7 @@ const io = new Server(server);
 
 io.on('connection',async (socket) => {
 
+    console.log('here', socket)
     socket.on('join', (contestId) => {
         socket.join(contestId);
     }) 
