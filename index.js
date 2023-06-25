@@ -26,6 +26,7 @@ io.on('connection',async (socket) => {
     });
   });
 
+  console.log(io)
 config();
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
