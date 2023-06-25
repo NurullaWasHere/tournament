@@ -5,17 +5,20 @@ import { config } from "dotenv";
 import apiRouter from "./routes/apiRouter.js";
 import { createServer } from 'http';
 import { Server } from "socket.io";
+import { messageModel } from "./sequelize/models.js";
 
 const app = express();
 const server = createServer(app);
 const io = new Server(server);
 
-io.on('connection', (socket) => {
-    console.log('A user connected');
-    socket.join('roomName');
-  
+io.on('connection',async (socket) => {
+
+    socket.on('join', (contestId) => {
+        socket.join(contestId);
+    }) 
     socket.on('message', (opts) => {
-      io.to('roomName').emit('chat message', msg);
+        console.log(opts);
+      io.to(opts.contestId).emit('chat message', msg);
     });
   
     socket.on('disconnect', () => {
