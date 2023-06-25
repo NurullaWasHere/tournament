@@ -112,8 +112,15 @@ export const invitedUser = sequelize.define('invited_user', {
     email: {type: DataTypes.STRING, allowNull: true},
 })
 
+export const paymentDetails = sequelize.define('payment_detail', {
+    id: {type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true},
+    payment_id: {type: DataTypes.STRING, allowNull: false},
+    sender_id: {type: DataTypes.INTEGER, allowNull: false},
+    status: {type: DataTypes.STRING, defaultValue: "pending"},
+})
 
-
+contest.hasMany(paymentDetails)
+paymentDetails.belongsTo(contest)
 
 User.hasMany(billingDetails)
 billingDetails.belongsTo(User)

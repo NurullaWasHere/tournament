@@ -1,9 +1,33 @@
 import { YooCheckout } from "@a2seven/yoo-checkout";
+import { paymentDetails, contest } from "../sequelize/models.js";
 
 const checkout = new YooCheckout({
     shopId: '223714',
     secretKey: 'test_ytP7XscPJhEiGf5lx4E-_kfYy24w_ISPLKSjnOELYc4',
 });
+
+export const findPayment = async (userId, contestId) => {
+  try {
+    const details = await paymentDetails.findAll({
+      where: {
+        senderId: userId,
+        contestId
+      },
+    })
+    if(!details){
+      return false;
+    }
+    console.log(details);
+    const isPaid = await getPayment(details.paymentId)
+    if(isPaid && isPaid.payment.status === 'succeeded'){
+      return true;
+    }
+    return false;
+  } catch (error) {
+    console.log(error)
+  }
+}
+
 
 export const makePayment = async (key, amount={value: 0, currency: 'KZT'}) => {  
   const createPayload = {
@@ -41,3 +65,18 @@ export const cancelPayment = async (paymentId, idempotenceKey ) => {
     console.log(error)
   }
 }  
+
+
+export const createPaymentDetails = async ( userId, contestId, payment_id ) => {
+  try {
+    const result = await paymentDetails.create({
+      sender_id: userId,
+      contestId,
+      payment_id
+    });
+    return result;
+  }
+  catch (error) {
+    console.log(error)
+  }
+}

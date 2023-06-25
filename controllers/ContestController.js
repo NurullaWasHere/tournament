@@ -1,8 +1,8 @@
-import {contest, contestRequirements, location, contestExpense, team} from '../sequelize/models.js'
+import {contest, contestRequirements, location, contestExpense, team, paymentDetails} from '../sequelize/models.js'
 import { createNewContest, addParticipantToContest } from '../services/Contest.service.js';
 import { getAllExpenses, getTotalPrice,} from '../services/ContestExpense.service.js';
 import { createUniqueUUID } from '../services/Contest.service.js';
-import { makePayment } from '../services/Payment.service.js';
+import { createPaymentDetails, makePayment } from '../services/Payment.service.js';
 import { getPayment } from '../services/Payment.service.js';
 
 
@@ -36,7 +36,7 @@ export const createContest = async (req, res) => {
 
 export const getContest = async (req, res) => {
   try {
-    const {contestId, categoryId, key} = req.query;
+    const {contestId, categoryId, key, organizerId} = req.query;
     if(!categoryId && !contestId && !key){
       const contests = await contest.findAll({
         where: {
@@ -87,6 +87,17 @@ export const getContest = async (req, res) => {
         allExpenses
       });
     }
+    if(organizerId){
+      const contests = await contest.findAll({
+        where: {
+          organizerId
+        }
+      });
+      return res.status(200).json({
+        success: true,
+        contests
+      });
+    }
     if(categoryId){
       const contests = await contest.findAll({
         where: {
@@ -95,8 +106,7 @@ export const getContest = async (req, res) => {
       });
       return res.status(200).json({
         success: true,
-        contests,
-        totalPrice
+        contests
       });
     }
     if(key){
@@ -160,6 +170,11 @@ export const pay = async (req,res) => {
     const {value} = req.body;    
     const key = createUniqueUUID(Math.random());
     const makePaymentResult = await makePayment(key, {value, currency: 'RUB'});
+
+    await createPaymentDetails( req.body.userId, req.body.contestId, makePaymentResult.id)
+
+    const participantResult = await addParticipantToContest(req.body.userId, req.body.contestId, {description: 'Оплачено'})
+    console.log(participantResult);
     return res.status(200).json({
       success: true,
       makePaymentResult
@@ -179,4 +194,43 @@ export const getPay = async (req, res) => {
   } catch (error) {
     console.log(error)
   }
+};
+
+export const isPaid = async (req,res) => {
+  try {
+    const {userId, contestId} = req.body;
+
+    const detailsOfUserPayment = await paymentDetails.findAll({
+      where: {
+        sender_id: userId,
+        contestId
+      }
+    });
+
+    if(!detailsOfUserPayment){
+      return res.status(200).json({
+        success: false,
+        message: 'Payment details not found'
+      });
+    }
+    const payment = await getPayment(detailsOfUserPayment[0].dataValues.payment_id);
+    console.log(payment);
+    if(payment.status === 'waiting_for_capture'){
+      return res.status(200).json({
+        success: true,
+        payment
+      });
+    }
+
+    return res.status(200).json({
+      success: false,
+      message: 'Payment not succeeded'
+    });
+  } catch (error) {
+    console.log(error)
+  }
+}
+
+export const payout = (bank_card) => {
+
 };

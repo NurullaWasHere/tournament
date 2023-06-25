@@ -1,4 +1,4 @@
-import {contest, contestRequirements, location, overView, User, participant} from '../sequelize/models.js'
+import {contest, contestRequirements, location, paymentDetails, User, participant} from '../sequelize/models.js'
 import {createLocation, getLocation} from './Location.service.js'
 import { createExpense } from './ContestExpense.service.js';
 import QRCode from 'qrcode';
@@ -104,7 +104,6 @@ export const addParticipantToContest = async (userId, contestId, opts = {descrip
           id: userId
         }
       })
-
       if(!user){
         return {success: false, message: 'User not found'};
       }
