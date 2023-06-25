@@ -1,4 +1,4 @@
-import {contest, contestRequirements, location, contestExpense, team, paymentDetails} from '../sequelize/models.js'
+import {contest, contestRequirements, location, contestExpense, team, paymentDetails, participant} from '../sequelize/models.js'
 import { createNewContest, addParticipantToContest } from '../services/Contest.service.js';
 import { getAllExpenses, getTotalPrice,} from '../services/ContestExpense.service.js';
 import { createUniqueUUID } from '../services/Contest.service.js';
@@ -41,7 +41,29 @@ export const getContest = async (req, res) => {
       const contests = await contest.findAll({
         where: {
           visibility: 'public'
-        }
+        },
+        include: [
+          {
+            model: location,
+            as: 'locations'
+          },
+          {
+            model: contestRequirements,
+            as: 'contestInfos'
+          },
+          {
+            model: team,
+            as: 'teams'
+          },
+          {
+            model: contestExpense,
+            as: 'contestExpenses'
+          },
+          {
+            model: participant,
+            as: 'participants'
+          }
+        ]
       });
       return res.status(200).json({
         success: true,
@@ -69,6 +91,10 @@ export const getContest = async (req, res) => {
           {
             model: contestExpense,
             as: 'contestExpenses'
+          },
+          {
+            model: participant,
+            as: 'participants'
           }
         ]
       });
@@ -91,7 +117,29 @@ export const getContest = async (req, res) => {
       const contests = await contest.findAll({
         where: {
           organizerId
-        }
+        },
+        include: [
+          {
+            model: location,
+            as: 'locations'
+          },
+          {
+            model: contestRequirements,
+            as: 'contestInfos'
+          },
+          {
+            model: team,
+            as: 'teams'
+          },
+          {
+            model: contestExpense,
+            as: 'contestExpenses'
+          },
+          {
+            model: participant,
+            as: 'participants'
+          }
+        ]
       });
       return res.status(200).json({
         success: true,
