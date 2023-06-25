@@ -20,7 +20,7 @@ export const createNewContest = async (contestData, requiremenets, contestLocati
       }
       const newLocation = await createLocation(contestLocation);
       const newRecuirements = await verifyRequirements(requiremenets);
-      const newQrCode = await createQrCode(String(expectedId));
+      const newQrCode = await createQrCode(String(key));
       const newContest = await contest.create({
         ...contestData,
         qrCode: newQrCode,
@@ -86,7 +86,7 @@ export const verifyRequirements = async (requirements) => {
 };
 
 const createQrCode = async (contestId) => {
-    let qrcode = await QRCode.toString(String(`http://localhost:5173/contest/approve?contestId=${contestId}`), {
+    let qrcode = await QRCode.toString(String(`https://offline-tournaments.vercel.app/#/contests/${contestId}`), {
       type: 'svg',
       errorCorrectionLevel: 'H'
     })
