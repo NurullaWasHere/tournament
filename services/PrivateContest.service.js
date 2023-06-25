@@ -63,7 +63,7 @@ export const createTeam = async ( teamData = [{}], contestId) => {
             name: users[i].name,
             telegram: users[i].telegram
           });
-          sendEmail(users[i].email, 'Приглашение в команду', `Вы были приглашены в команду ${newTeam.name} в соревновании ${contestData.name}`)
+          sendEmail(users[i].telegram, 'Приглашение в команду', `Вы были приглашены в команду ${newTeam.name} в соревновании ${contestData.name}`)
           await newTeam.addInvited_user(newInvitedUser);       
       }
     }
