@@ -206,8 +206,8 @@ export const isPaid = async (req,res) => {
         contestId
       }
     });
-
-    if(!detailsOfUserPayment){
+    console.log(detailsOfUserPayment);
+    if(detailsOfUserPayment.length === 0){
       return res.status(200).json({
         success: false,
         message: 'Payment details not found'
