@@ -57,7 +57,7 @@ export const getContest = async (req, res) => {
             include:[
               {
                 model: invitedUser,
-                as: 'invited_users'
+                as: 'invitedUsers'
               }
             ]
           },
@@ -179,7 +179,13 @@ export const getContest = async (req, res) => {
           },
           {
             model: team,
-            as: 'teams'
+            as: 'teams',
+            include:[
+              {
+                model: invitedUser,
+                as: 'invited_users'
+              }
+            ]
           },
           {
             model: contestExpense,
