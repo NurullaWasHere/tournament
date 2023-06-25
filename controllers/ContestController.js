@@ -1,4 +1,4 @@
-import {contest, contestRequirements, location, contestExpense, team, paymentDetails, participant} from '../sequelize/models.js'
+import {contest, contestRequirements, location, contestExpense, team, paymentDetails, participant, invitedUser} from '../sequelize/models.js'
 import { createNewContest, addParticipantToContest } from '../services/Contest.service.js';
 import { getAllExpenses, getTotalPrice,} from '../services/ContestExpense.service.js';
 import { createUniqueUUID } from '../services/Contest.service.js';
@@ -53,7 +53,13 @@ export const getContest = async (req, res) => {
           },
           {
             model: team,
-            as: 'teams'
+            as: 'teams',
+            include:[
+              {
+                model: invitedUser,
+                as: 'invited_users'
+              }
+            ]
           },
           {
             model: contestExpense,

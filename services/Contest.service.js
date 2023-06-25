@@ -131,6 +131,6 @@ export const addParticipantToContest = async (userId, contestId, opts = {descrip
 
 export const createUniqueUUID = (id) => {
   const MY_NAMESPACE = '1b671a64-40d5-491e-99b0-da01ff1f3341';
-  const uuidV5 = v5(String(id), MY_NAMESPACE)
+  const uuidV5 = v5(String(Math.random()), MY_NAMESPACE)
   return uuidV5;
 }

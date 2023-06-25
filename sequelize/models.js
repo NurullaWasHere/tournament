@@ -119,6 +119,14 @@ export const paymentDetails = sequelize.define('payment_detail', {
     status: {type: DataTypes.STRING, defaultValue: "pending"},
 })
 
+export const messageModel = sequelize.define('messageModel', {
+    id: {type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true},
+    text: {type: DataTypes.TEXT, allowNull: false},
+    contestId: {type: DataTypes.INTEGER, allowNull: false},
+    userId: {type: DataTypes.INTEGER, allowNull: false},
+    userName: {type: DataTypes.STRING, allowNull: false},
+})
+
 contest.hasMany(paymentDetails)
 paymentDetails.belongsTo(contest)
 
