@@ -1,5 +1,5 @@
 import { Router } from "express";
-import {createContest, getContest, enrollToContest, getPay, isPaid} from '../controllers/ContestController.js'
+import {createContest, getContest, deleteContest, getPay, isPaid} from '../controllers/ContestController.js'
 import { validateCreateContest } from "../validations/contestValidator.js";
 import { pay } from "../controllers/ContestController.js";
 
@@ -12,6 +12,6 @@ contestRouter.get('/getContest',getContest)
 contestRouter.post('/payment', pay)
 contestRouter.get('/getPay', getPay)
 contestRouter.post('/paymentDetails', isPaid)
-
+contestRouter.post('/deleteContest', deleteContest)
 
 export default contestRouter;

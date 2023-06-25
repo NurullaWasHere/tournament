@@ -213,10 +213,6 @@ export const updateContest = async (req, res) => {
 
 };
 
-export const deleteContest = async (req, res) => {
-
-};
-
 export const pay = async (req,res) => {
   try {
     const {value} = req.body;    
@@ -283,6 +279,23 @@ export const isPaid = async (req,res) => {
   }
 }
 
-export const payout = (bank_card) => {
-
-};
+export const deleteContest = async (req,res) => {
+  try {
+    const {contestId} = req.body;
+    await participant.destroy({
+      where: {
+        contestId
+      }
+    })
+    const result = await contest.destroy({
+      where: {
+        id: contestId
+      }
+    })
+    return res.status(200).json({
+      success: true,
+    });
+  } catch (error) {
+    console.log(error)
+  }
+}
