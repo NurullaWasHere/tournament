@@ -49,7 +49,7 @@ app.use('/api', apiRouter)
 app.listen(process.env.PORT || 3003 , async () => {
     try {
         await sequelize.authenticate();
-        await sequelize.sync();
+        await sequelize.sync({alter: true});
     } catch (error) {
         console.log(error)
     }
