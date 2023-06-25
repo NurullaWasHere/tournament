@@ -37,7 +37,7 @@ export const createContest = async (req, res) => {
 export const getContest = async (req, res) => {
   try {
     const {contestId, categoryId, key, organizerId} = req.query;
-    if(!categoryId && !contestId && !key){
+    if(!categoryId && !contestId && !key && !organizerId){
       const contests = await contest.findAll({
         where: {
           visibility: 'public'

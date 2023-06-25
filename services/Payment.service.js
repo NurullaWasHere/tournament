@@ -6,27 +6,27 @@ const checkout = new YooCheckout({
     secretKey: 'test_ytP7XscPJhEiGf5lx4E-_kfYy24w_ISPLKSjnOELYc4',
 });
 
-export const findPayment = async (userId, contestId) => {
-  try {
-    const details = await paymentDetails.findAll({
-      where: {
-        senderId: userId,
-        contestId
-      },
-    })
-    if(!details){
-      return false;
-    }
-    console.log(details);
-    const isPaid = await getPayment(details.paymentId)
-    if(isPaid && isPaid.payment.status === 'succeeded'){
-      return true;
-    }
-    return false;
-  } catch (error) {
-    console.log(error)
-  }
-}
+// export const findPayment = async (userId, contestId) => {
+//   try {
+//     const details = await paymentDetails.findAll({
+//       where: {
+//         senderId: userId,
+//         contestId
+//       },
+//     })
+//     if(!details){
+//       return false;
+//     }
+//     console.log(details);
+//     const isPaid = await getPayment(details.paymentId)
+//     if(isPaid && isPaid.payment.status === 'succeeded'){
+//       return true;
+//     }
+//     return false;
+//   } catch (error) {
+//     console.log(error)
+//   }
+// }
 
 
 export const makePayment = async (key, amount={value: 0, currency: 'KZT'}) => {  
